@@ -30,11 +30,27 @@ class HashTable:
         for i in range(size):
             self.table[str(i)] = LinkedList()
 
-    def hash(self, val):
-        return str(val % self.size)
+    def hash(self, s, g=31):
+        hash_value = 0
+        for i in range(len(s)):
+            hash_value = hash_value*g + ord(s[i])
+        return str(hash_value % self.size)
 
-    def insert(self, val):
-        self.table[self.hash(val)].insert(val)
+    def insert(self, key, val):
+        self.table[self.hash(key)].insert(val)
+
+    def _get_chain(self, val):
+        return self.table[self.hash(val)]
+
+    def get_item(self, key, val):
+        node = self._get_chain(val).head
+        while node:
+            if node.val.data[key]==val:
+                return node.val
+            else:
+                node = node.next
+
+        return None
 
     def display(self):
         for i in self.table:
@@ -42,11 +58,11 @@ class HashTable:
             self.table[i].display()
 
 # h = HashTable(5)
-# h.insert(12)
-# h.insert(22)
-# h.insert(25)
-# h.insert(15)
-# h.insert(3)
-# h.insert(34)
+# h.insert("Bottle")
+# h.insert("Stroller")
+# h.insert("Diaper")
+# h.insert("Milk Powder")
+# h.insert("Toy Stars")
+# h.insert("Toy Ball")
 #
 # h.display()
