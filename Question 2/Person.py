@@ -8,6 +8,13 @@ class Person:
         self.public = public
         self.biography = biography
 
+    def display(self):
+        print(f"Name: {self.name}")
+        print(f"Gender: {self.gender}")
+        print(f"Address: {self.address}")
+        print(f"Public: {self.public}")
+        print(f"Biography: {self.biography}")
+
 p1 = Person(
     name='John Clark',
     gender='Male',
@@ -88,9 +95,4 @@ p10 = Person(
     biography='Pastry chef at a boutique bakery. Shares recipes online.'
 )
 
-arr = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]
-
-network = Graph(10)
-
-for i in arr:
-    network.add_vertex(i)
+person_list = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]
