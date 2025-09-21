@@ -1,41 +1,47 @@
 class Graph:
     def __init__(self, size):
-        self.matrix = [ [None]*size for _ in range(size)]
+        self.adjacency_list = {}
         self.size = size
-        self.vertex_data = []
+        self.vertex_data = {}
 
-    def add_vertex(self, val):
+    def add_vertex(self, key, val):
         if len(self.vertex_data)<self.size:
-            self.vertex_data.append(val)
+            self.vertex_data[key] = val
+            self.adjacency_list[key] = []
         else:
             raise ValueError("No space left in the graph")
 
     def add_edge(self, src, dest):
-        i_src = self.vertex_data.index(src)
-        i_dest = self.vertex_data.index(dest)
-        self.matrix[i_src][i_dest] = 1
+        if dest not in self.adjacency_list[src]:
+            self.adjacency_list[src].append(dest)
+
+    def remove_edge(self, src, dest):
+        outgoing_vertexes = self.adjacency_list[src]
+        if dest in outgoing_vertexes:
+            outgoing_vertexes.pop(outgoing_vertexes.index(dest))
+            return True
+
+        return False
 
     def display(self):
-        for i in self.matrix:
-            print(i)
+        for key in self.adjacency_list:
+            print(key+": "+str(self.adjacency_list[key]))
 
     def list_outgoing_vertex(self, vertex):
-        i_vertex = self.vertex_data.index(vertex)
-        outgoing_row = self.matrix[i_vertex]
-        for i in range(len(outgoing_row)):
-            if outgoing_row[i]:
-                print(self.vertex_data[i])
+        outgoing_list = self.adjacency_list[vertex]
+        for i in range(len(outgoing_list)):
+            print(outgoing_list[i])
 
 # g = Graph(4)
-# g.add_vertex("A")
-# g.add_vertex("B")
-# g.add_vertex("C")
-# g.add_vertex("D")
+# g.add_vertex("A", "A")
+# g.add_vertex("B", "B")
+# g.add_vertex("C", "C")
+# g.add_vertex("D", "D")
 # g.add_edge("A", "B")
 # g.add_edge("A", "C")
 # g.add_edge("D", "A")
 # g.add_edge("C", "B")
 #
 # g.display()
-#
+# print('')
 # g.list_outgoing_vertex("A")

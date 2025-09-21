@@ -28,7 +28,7 @@ class RetailShop:
         self.storage.insert(product.data['name'], product)
 
     def search(self, val):
-        return self.storage.get_item('name', val)
+        return self.storage.get_item(val)
 
     def delete_product(self, name):
         hash_key = self.storage.hash(name)
@@ -36,7 +36,7 @@ class RetailShop:
         node = chain.head
         prev = None
         while node:
-            if node.val.name==name:
+            if node.key==name:
                 if prev:
                     prev.next = node.next
                 else:#delete head
