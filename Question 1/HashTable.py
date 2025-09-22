@@ -2,61 +2,35 @@ import random
 import string
 import time
 
-class Node:
-    def __init__(self, val, key, next=None):
-        self.val = val
-        self.next = next
+class Item:
+    def __init__(self, key, val):
         self.key = key
-
-class LinkedList:
-    def __init__(self, head=None):
-        self.head = head
-
-    def insert(self, key, val):
-        if self.head:
-            node = self.head
-            while node.next:
-                node = node.next
-            node.next = Node(val, key)
-        else:
-            self.head = Node(val, key)
-
-    def display(self):
-        node = self.head
-        while node:
-            print(node.val)
-            node = node.next
-
+        self.val = val
 
 class HashTable:
     def __init__(self, size):
         self.size = size
         self.table = {}
-        for i in range(size):
-            self.table[str(i)] = LinkedList()
 
-    def hash(self, s, g=31):
-        # hash_value = 0
-        # for i in range(len(s)):
-        #     hash_value = hash_value*g + ord(s[i])
-        # return str(hash_value % self.size)
+    def hash(self, s):
         return str(hash(s) % self.size)
 
     def insert(self, key, val):
-        chain = self.table[self.hash(key)]
-        chain.insert(key, val)
+        new_item = Item(key, val)
+        if self.hash(key) in self.table:
+            dynamic_list = self.table[self.hash(key)]
+            dynamic_list.append(new_item)
+        else:
+            self.table[self.hash(key)] = [new_item]
 
     def _get_chain(self, key):
         return self.table[self.hash(key)]
 
     def get_item(self, key):
-        node = self._get_chain(key).head
-        while node:
-            if node.key==key:
-                return node.val
-            else:
-                node = node.next
-
+        item_list = self._get_chain(key)
+        for item in item_list:
+            if item.key==key:
+                return item
         return None
 
     def display(self):

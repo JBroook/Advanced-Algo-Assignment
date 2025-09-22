@@ -15,6 +15,11 @@ class Graph:
         if dest not in self.adjacency_list[src]:
             self.adjacency_list[src].append(dest)
 
+    def list_outgoing_vertex(self, vertex):
+        outgoing_list = self.adjacency_list[vertex]
+        for i in range(len(outgoing_list)):
+            print(outgoing_list[i])
+
     def remove_edge(self, src, dest):
         outgoing_vertexes = self.adjacency_list[src]
         if dest in outgoing_vertexes:
@@ -26,11 +31,6 @@ class Graph:
     def display(self):
         for key in self.adjacency_list:
             print(key+": "+str(self.adjacency_list[key]))
-
-    def list_outgoing_vertex(self, vertex):
-        outgoing_list = self.adjacency_list[vertex]
-        for i in range(len(outgoing_list)):
-            print(outgoing_list[i])
 
 # g = Graph(4)
 # g.add_vertex("A", "A")

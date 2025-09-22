@@ -1,4 +1,4 @@
-from Graph import Graph
+import random as rand
 
 class Person:
     def __init__(self, name, gender, address, public, biography):
@@ -95,4 +95,12 @@ p10 = Person(
     biography='Pastry chef at a boutique bakery. Shares recipes online.'
 )
 
-person_list = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]
+person_list = [p1, p2, p3, p4, p5, p6, p7, p8, p9]
+
+if __name__=="__main__":
+    # create random following
+    for _ in range(30):
+        name1 = person_list[rand.randint(0, 8)].name
+        name2 = person_list[rand.randint(0, 8)].name
+        if name1 != name2:
+            print(f"(\'{name1}\',\'{name2}\'),")

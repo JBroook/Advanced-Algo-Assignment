@@ -27,25 +27,18 @@ class RetailShop:
     def add_product(self, product):
         self.storage.insert(product.data['name'], product)
 
-    def search(self, val):
-        return self.storage.get_item(val)
+    def search(self, key):
+        return self.storage.get_item(key).val
 
-    def delete_product(self, name):
-        hash_key = self.storage.hash(name)
-        chain = self.storage.table[hash_key]
-        node = chain.head
-        prev = None
-        while node:
-            if node.key==name:
-                if prev:
-                    prev.next = node.next
-                else:#delete head
-                    chain.head = node.next
+    def delete_product(self, key):
+        hash_key = self.storage.hash(key)
+        item_list = self.storage.table[hash_key]
+        for i in range(len(item_list)):
+            if item_list[i].key==key:
+                item_list.pop(i)
                 return True
-                
-            prev = node
-            node = node.next
         return False
+
 
 shop = RetailShop()
 p1 = Product(
@@ -113,10 +106,9 @@ if __name__ =='__main__':
             case "3":
                 print('********************\n')
                 for key in shop.storage.table:
-                    node = shop.storage.table[key].head
-                    while node:
-                        node.val.display()
-                        node = node.next
+                    item_list = shop.storage.table[key]
+                    for item in item_list:
+                        item.val.display()
                         print('')
                 print('********************')
             case "4":

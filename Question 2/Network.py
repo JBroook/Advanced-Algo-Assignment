@@ -7,8 +7,8 @@ class Network(Graph):
         if name in self.adjacency_list:
             print(f"{name} follows:")
             outgoing_row = self.adjacency_list[name]
-            for i in outgoing_row:
-                print(i)
+            for follower in outgoing_row:
+                print(follower)
         else:
             print(f"No user found with the name \'{name}\'")
 
@@ -37,18 +37,7 @@ class Network(Graph):
                 return self.vertex_data[user]
         return None
 
-n = Network(10)
-
-for person in p.person_list:
-    n.add_vertex(person.name, person)
-
-#create random following
-for _ in range(60):
-    name1 = p.person_list[rand.randint(0,9)].name
-    name2 = p.person_list[rand.randint(0, 9)].name
-    if name1!=name2:
-        n.add_edge(name1, name2)
-
+#cli operations for when we're looking at a specific user
 def individual_cli(network, user):
     while True:
         print('*' * 10)
@@ -88,6 +77,44 @@ def individual_cli(network, user):
                 break
 
 if __name__=="__main__":
+    # setting up the network
+    n = Network(10)
+
+    for person in p.person_list:
+        n.add_vertex(person.name, person)
+
+    connections = [
+        ('John Clark', 'Nurul Aini'),
+        ('Ahmad Zulkifli', 'Rajesh Kumar'),
+        ('Rajesh Kumar', 'David Lim'),
+        ('Nurul Aini', 'Rajesh Kumar'),
+        ('Emily Tan', 'John Clark'),
+        ('John Clark', 'Ahmad Zulkifli'),
+        ('Ahmad Zulkifli', 'David Lim'),
+        ('Sarah Wong', 'Rajesh Kumar'),
+        ('Nurul Aini', 'Chong Mei Ling'),
+        ('David Lim', 'Chong Mei Ling'),
+        ('Rajesh Kumar', 'Sarah Wong'),
+        ('Ahmad Zulkifli', 'Chong Mei Ling'),
+        ('Emily Tan', 'Benjamin Lee'),
+        ('John Clark', 'Ahmad Zulkifli'),
+        ('Sarah Wong', 'Benjamin Lee'),
+        ('Chong Mei Ling', 'John Clark'),
+        ('Nurul Aini', 'John Clark'),
+        ('Rajesh Kumar', 'Sarah Wong'),
+        ('Emily Tan', 'Benjamin Lee'),
+        ('Chong Mei Ling', 'Emily Tan'),
+        ('Sarah Wong', 'Benjamin Lee'),
+        ('Emily Tan', 'Rajesh Kumar'),
+        ('Sarah Wong', 'John Clark'),
+        ('Sarah Wong', 'John Clark'),
+        ('Nurul Aini', 'Ahmad Zulkifli'),
+        ('Chong Mei Ling', 'Rajesh Kumar')
+    ]
+
+    for connection in connections:
+        n.add_edge(connection[0],connection[1])
+
     print('Welcome to CLIgram')
     while True:
         print('')
@@ -111,3 +138,10 @@ if __name__=="__main__":
                         print('This user\'s profile is private.')
                 else:
                     print('This user doesn\'t exist')
+            case "3":
+                print("Enter new user details")
+                name = input("User's name: ")
+                gender = input("Gender (Male/Female): ")
+                address = input("Address: ")
+                public = input("Public profile (yes/no): ")
+                biography = input("Biography: ")

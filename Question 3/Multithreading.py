@@ -7,9 +7,9 @@ def wait_2():
     time.sleep(2)
 
 def multithread():
-    t1 = thr.Thread(target=factorial, args=(5000,))
-    t2 = thr.Thread(target=factorial, args=(1000,))
-    t3 = thr.Thread(target=factorial, args=(2000,))
+    t1 = thr.Thread(target=factorial, args=(50,))
+    t2 = thr.Thread(target=factorial, args=(100,))
+    t3 = thr.Thread(target=factorial, args=(200,))
 
     threads = [t1, t2, t3]
 
@@ -28,9 +28,9 @@ def multithread():
 def single_thread():
     start_time = time.perf_counter_ns()
 
-    factorial(5000)
-    factorial(1000)
-    factorial(2000)
+    factorial(50)
+    factorial(100)
+    factorial(200)
 
     end_time = time.perf_counter_ns()
 
@@ -55,5 +55,7 @@ if __name__=="__main__":
     avg_time_s /= 10
     print(f"10 iterations complete. Average time taken: {avg_time_s} nanoseconds")
 
-    print(f"{"\nSinglethreading" if avg_time_s<avg_time_m else "Multithreading"} is faster than {"Singlethreading" if avg_time_s>=avg_time_m else "Multithreading"}")
+    winner = "\nSinglethreading" if avg_time_s<avg_time_m else "Multithreading"
+    loser = "Singlethreading" if avg_time_s>=avg_time_m else "Multithreading"
+    print(f"{winner} is faster than {loser}")
     print(f"Time difference: {abs(avg_time_s-avg_time_m)}")
