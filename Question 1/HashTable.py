@@ -38,11 +38,6 @@ class HashTable:
                 return item
         return None
 
-    def display(self):
-        for i in range(len(self.table)):
-            print('Slot',i)
-            self.table[i].display()
-
 if __name__=="__main__":
     simple_list = []
     hash_table = HashTable(1000)
