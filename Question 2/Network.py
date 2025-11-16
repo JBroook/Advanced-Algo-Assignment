@@ -1,6 +1,5 @@
 from Graph import Graph
 import Person as p
-import random as rand
 
 class Network(Graph):
     def list_follows(self, name):
@@ -48,6 +47,7 @@ def individual_cli(network, user):
         print('4. Unfollow an existing user')
         print('5. Return')
         action_input = input("Enter your choice (1/2/3/4/5): ")
+        print('*' * 10)
         match action_input:
             case "1":
                 network.list_follows(user.name)
@@ -55,18 +55,18 @@ def individual_cli(network, user):
                 network.list_followers(user.name)
             case "3":
                 new_follow = input("Enter name of user to follow: ")
-                new_follow = n.get_user(new_follow)
+                new_follow = network.get_user(new_follow)
                 if new_follow:
-                    n.add_edge(user.name, new_follow.name)
+                    network.add_edge(user.name, new_follow.name)
                     print('User followed successfully')
                     break
                 else:
                     print('No such user.')
             case "4":
                 to_unfollow = input("Enter name of user to unfollow: ")
-                to_unfollow = n.get_user(to_unfollow)
+                to_unfollow = network.get_user(to_unfollow)
                 if to_unfollow:
-                    if n.remove_edge(user.name, to_unfollow.name):
+                    if network.remove_edge(user.name, to_unfollow.name):
                         print('User unfollowed successfully')
                     else:
                         print('User was already not followed')
@@ -78,18 +78,21 @@ def individual_cli(network, user):
 
 if __name__=="__main__":
     # setting up the network
-    n = Network(10)
+    network = Network(10)
 
     for person in p.person_list:
-        n.add_vertex(person.name, person)
+        network.add_vertex(person.name, person)
 
     connections = [
         ('John Clark', 'Nurul Aini'),
+        ('John Clark', 'Ahmad Zulkifli'),
+        ('Chong Mei Ling', 'John Clark'),
+        ('Nurul Aini', 'John Clark'),
+        ('Sarah Wong', 'John Clark'),
+        ('Emily Tan', 'John Clark'),
         ('Ahmad Zulkifli', 'Rajesh Kumar'),
         ('Rajesh Kumar', 'David Lim'),
         ('Nurul Aini', 'Rajesh Kumar'),
-        ('Emily Tan', 'John Clark'),
-        ('John Clark', 'Ahmad Zulkifli'),
         ('Ahmad Zulkifli', 'David Lim'),
         ('Sarah Wong', 'Rajesh Kumar'),
         ('Nurul Aini', 'Chong Mei Ling'),
@@ -97,23 +100,18 @@ if __name__=="__main__":
         ('Rajesh Kumar', 'Sarah Wong'),
         ('Ahmad Zulkifli', 'Chong Mei Ling'),
         ('Emily Tan', 'Benjamin Lee'),
-        ('John Clark', 'Ahmad Zulkifli'),
         ('Sarah Wong', 'Benjamin Lee'),
-        ('Chong Mei Ling', 'John Clark'),
-        ('Nurul Aini', 'John Clark'),
         ('Rajesh Kumar', 'Sarah Wong'),
         ('Emily Tan', 'Benjamin Lee'),
         ('Chong Mei Ling', 'Emily Tan'),
         ('Sarah Wong', 'Benjamin Lee'),
         ('Emily Tan', 'Rajesh Kumar'),
-        ('Sarah Wong', 'John Clark'),
-        ('Sarah Wong', 'John Clark'),
         ('Nurul Aini', 'Ahmad Zulkifli'),
         ('Chong Mei Ling', 'Rajesh Kumar')
     ]
 
     for connection in connections:
-        n.add_edge(connection[0],connection[1])
+        network.add_edge(connection[0],connection[1])
 
     print('Welcome to CLIgram')
     while True:
@@ -123,17 +121,18 @@ if __name__=="__main__":
         print('2. View specific user')
         print('3. Add new user')
         action_input = input("Enter your choice (1/2/3): ")
+        print('*' * 10)
         match action_input:
             case "1":
-                n.list_all_users()
-                print('')
+                network.list_all_users()
+                print('*' * 10)
             case "2":
                 username = input("Enter user's name: ")
-                user = n.get_user(username)
+                user = network.get_user(username)
                 if user:
                     if user.public:
                         user.display()
-                        individual_cli(n, user)
+                        individual_cli(network, user)
                     else:
                         print('This user\'s profile is private.')
                 else:
@@ -145,3 +144,13 @@ if __name__=="__main__":
                 address = input("Address: ")
                 public = input("Public profile (yes/no): ")
                 biography = input("Biography: ")
+
+                new_user = p.Person(
+                    name=name,
+                    gender=gender,
+                    address=address,
+                    public=public=="yes",
+                    biography=biography
+                )
+                network.add_vertex(new_user.name, new_user)
+                print("New user successfully added.")

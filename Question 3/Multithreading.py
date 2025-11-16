@@ -3,8 +3,12 @@ import threading as thr
 
 from Factorial import factorial
 
-def wait_2():
-    time.sleep(2)
+# import sys, sysconfig
+
+# print(sys.version)
+# print(sys._is_gil_enabled())  # returns False when GIL is disabled
+# print(sysconfig.get_config_var("Py_GIL_DISABLED"))  # 1 if free-threading support is enabled
+
 
 def multithread():
     t1 = thr.Thread(target=factorial, args=(50,))
@@ -39,23 +43,50 @@ def single_thread():
 if __name__=="__main__":
     print('*****Multithreading*****')
     avg_time_m = 0
-    for i in range(10):
+    m_times = []
+    for i in range(11):
         time_taken = multithread()
-        print(f"Iteration {i+1} complete. Time taken: {time_taken} nanoseconds")
-        avg_time_m += time_taken
+        if i>0:
+            print(f"Iteration {i} complete. Time taken: {time_taken} nanoseconds")
+            avg_time_m += time_taken
+            m_times.append(time_taken)
+        else:
+            print(f"Warm up complete. Time taken: {time_taken} nanoseconds")
     avg_time_m /= 10
-    print(f"10 iterations complete. Average time taken: {avg_time_m} nanoseconds")
+    print(
+        f"10 iterations complete.\n"
+        f"Total time taken: {avg_time_m*10} nanoseconds\n"
+        f"Average time taken: {avg_time_m} nanoseconds"
+    )
 
     print('\n*****Singlethreading*****')
     avg_time_s = 0
-    for i in range(10):
+    s_times = []
+    for i in range(11):
         time_taken = single_thread()
-        print(f"Iteration {i + 1} complete. Time taken: {time_taken} nanoseconds")
-        avg_time_s += time_taken
+        if i>0:
+            print(f"Iteration {i} complete. Time taken: {time_taken} nanoseconds")
+            avg_time_s += time_taken
+            s_times.append(time_taken)
+        else:
+            print(f"Warm up complete. Time taken: {time_taken} nanoseconds")
     avg_time_s /= 10
-    print(f"10 iterations complete. Average time taken: {avg_time_s} nanoseconds")
+    print(
+        f"10 iterations complete.\n"
+        f"Total time taken: {avg_time_s * 10} nanoseconds\n"
+        f"Average time taken: {avg_time_s} nanoseconds"
+    )
 
-    winner = "\nSinglethreading" if avg_time_s<avg_time_m else "Multithreading"
-    loser = "Singlethreading" if avg_time_s>=avg_time_m else "Multithreading"
+    if avg_time_s < avg_time_m:
+        winner = "Singlethreading"
+        loser = "Multithreading"
+        win_count = sum(1 if a > b else 0 for a, b in zip(m_times, s_times))
+    else:
+        winner = "Multithreading"
+        loser = "Singlethreading"
+        win_count = sum(1 if a > b else 0 for a, b in zip(s_times, m_times))
+
+    print('')
     print(f"{winner} is faster than {loser}")
+    print(f"{winner} beats {loser} in {win_count}/10 iterations")
     print(f"Time difference: {abs(avg_time_s-avg_time_m)}")

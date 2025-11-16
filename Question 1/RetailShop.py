@@ -20,27 +20,31 @@ class Product:
         print(f"Category: {self.data['category']}")
 
 
-class RetailShop:
-    def __init__(self):
-        self.storage = HashTable(10)
-
+class RetailShop(HashTable):
     def add_product(self, product):
-        self.storage.insert(product.data['name'], product)
+        self.insert(product.data['name'], product)
 
     def search(self, key):
-        return self.storage.get_item(key).val
+        return self.get_item(key).val
 
     def delete_product(self, key):
-        hash_key = self.storage.hash(key)
-        item_list = self.storage.table[hash_key]
+        hash_key = self.hash(key)
+        item_list = self.table[hash_key]
         for i in range(len(item_list)):
             if item_list[i].key==key:
                 item_list.pop(i)
                 return True
         return False
 
+    def view_all_products(self):
+        for key in self.table:
+            item_list = self.table[key]
+            for item in item_list:
+                item.val.display()
+                print('')
 
-shop = RetailShop()
+
+shop = RetailShop(10)
 p1 = Product(
     name='Bottle',
     description='Glass bottle with plastic cap',
@@ -66,13 +70,11 @@ p3 = Product(
     category='equipment'
 )
 
-shop.add_product(p1)
-shop.add_product(p2)
-shop.add_product(p3)
-
-# shop.search('name','Toy').display()
-
 if __name__ =='__main__':
+    shop.add_product(p1)
+    shop.add_product(p2)
+    shop.add_product(p3)
+
     print('Welcome to your retail shop system.\n')
     while True:
         print('What would you like to do?')
@@ -84,7 +86,7 @@ if __name__ =='__main__':
         action_choice = input('Enter your choice (1/2/3/4/5): ')
         print('')
         match(action_choice):
-            case "1":
+            case "1":#create new product
                 id = input("Product ID: ")
                 name = input("Product name: ")
                 description = input("Description: ")
@@ -95,30 +97,26 @@ if __name__ =='__main__':
                 new_product = Product(name, description, price, stock, id, category)
                 shop.add_product(new_product)
                 print(f"Product \'{new_product.data['name']}\' has been successfully added\n")
-            case "2":
+            case "2":#search products
                 product_name = input("Enter product name: ")
                 search_result = shop.search(product_name)
                 if search_result:
                     search_result.display()
                 else:
-                    print('Product with that name not found. Please ensure you type the exact name of the product with correct spelling and spaces.')
+                    print('Product with that name not found.')
                 print('')
-            case "3":
+            case "3":#view all products
                 print('********************\n')
-                for key in shop.storage.table:
-                    item_list = shop.storage.table[key]
-                    for item in item_list:
-                        item.val.display()
-                        print('')
+                shop.view_all_products()
                 print('********************')
-            case "4":
+            case "4":#delete a product
                 target_name = input('Enter name of the product to be deleted: ')
                 if shop.delete_product(target_name):
                     print("Product deleted successfully")
                 else:
                     print("Failed to delete: No product was found with this name")
                 print('')
-            case "5":
+            case "5":#edit a product
                 target_name = input("Enter name of product to be edited: ")
                 search_result = shop.search(target_name)
                 if search_result:
@@ -144,15 +142,17 @@ if __name__ =='__main__':
                         'category': category,
                     }
 
+                    key_changed = False
                     for key in new_details:
                         if new_details[key]!="" and new_details[key]!=search_result.data[key]:
                             if key=='name':#change position in hash table
+                                key_changed = True
                                 shop.delete_product(search_result.data['name'])
 
                             search_result.data[key] = new_details[key]
 
-                    shop.add_product(search_result)
+                    if key_changed: shop.add_product(search_result)
 
                     print("Product edited successfully\n")
                 else:
-                    print("No product with this this.\n")
+                    print("No product with this name.\n")

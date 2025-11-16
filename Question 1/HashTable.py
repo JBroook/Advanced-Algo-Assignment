@@ -9,7 +9,8 @@ class Item:
 
 class HashTable:
     def __init__(self, size):
-        self.size = size
+        self.original_size = size
+        self.size = round(size/0.75)
         self.table = {}
 
     def hash(self, s):
@@ -17,13 +18,17 @@ class HashTable:
 
     def insert(self, key, val):
         new_item = Item(key, val)
-        if self.hash(key) in self.table:
-            dynamic_list = self.table[self.hash(key)]
+        hash_key = self.hash(key)
+        if hash_key in self.table:
+            dynamic_list = self.table[hash_key]
             dynamic_list.append(new_item)
         else:
-            self.table[self.hash(key)] = [new_item]
+            self.table[hash_key] = [new_item]
 
     def _get_chain(self, key):
+        if self.hash(key) not in self.table:
+            return None
+
         return self.table[self.hash(key)]
 
     def get_item(self, key):
@@ -34,24 +39,13 @@ class HashTable:
         return None
 
     def display(self):
-        for i in self.table:
+        for i in range(len(self.table)):
             print('Slot',i)
             self.table[i].display()
 
-# h = HashTable(5)
-# h.insert("Bottle")
-# h.insert("Stroller")
-# h.insert("Diaper")
-# h.insert("Milk Powder")
-# h.insert("Toy Stars")
-# h.insert("Toy Ball")
-#
-# h.display()
-
 if __name__=="__main__":
     simple_list = []
-    #75% load factor
-    hash_table = HashTable(round(1000*1.3))
+    hash_table = HashTable(1000)
     for i in range(1000):
         #generates random string of uppercase letters and numbers
         s = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
